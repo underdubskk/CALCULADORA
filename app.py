@@ -1,6 +1,7 @@
-# importando/chamando o flet (e cores)
+# importando o flet/cores/decimal
 import flet as ft
 from flet import colors
+from decimal import Decimal
 
 # lista de botões
 botoes = [
@@ -40,12 +41,24 @@ def main(page: ft.Page):
     result = ft.Text(value = '0', color = colors.WHITE, size = 20)
 
     # criando a função de calcular dos botões
-    def calculate():
-        pass
+    def calculate(operador, value_at):
+        try:
+            value = eval(value_at)
+
+            if operador == '%':
+                value /= 100
+            elif operador == '±':
+                value = -value
+        except:
+            return 'Error'
+    
+        digits = min(abs(Decimal(value).as_tuple().exponent), 6)
+        return format(value, f'.{digits}f')
+            
 
     # criando ás funções do botões
     def select(e):
-        value_at = result.value if result.value != '0' else ''
+        value_at = result.value if result.value not in ('0','Error') else ''
         value = e.control.content.value
 
         if value.isdigit():
@@ -59,7 +72,7 @@ def main(page: ft.Page):
             value = value_at + value
 
             if value[-1] in ('=','%',"±"):
-                value = calculate()
+                value = calculate(operador = value[-1], value_at = value_at)
 
         result.value = value
         result.update()
