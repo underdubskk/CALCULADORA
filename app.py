@@ -106,10 +106,6 @@ def main(page: ft.Page):
     page.add(display, keyboard)
 
 
-
-
-
-
 # efetuando a aplicação do projeto
 ft.app(target = main)
 
